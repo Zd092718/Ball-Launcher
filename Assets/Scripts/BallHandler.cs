@@ -5,10 +5,12 @@ using UnityEngine.InputSystem;
 
 public class BallHandler : MonoBehaviour
 {
+    [SerializeField] private Rigidbody2D currentBallRigidbody;
+    private Camera mainCamera;
     // Start is called before the first frame update
     void Start()
     {
-
+        mainCamera = Camera.main;
     }
 
     // Update is called once per frame
@@ -16,10 +18,18 @@ public class BallHandler : MonoBehaviour
     {
         if (!Touchscreen.current.primaryTouch.press.isPressed)
         {
+            currentBallRigidbody.isKinematic = false;
             return;
         }
+
+        currentBallRigidbody.isKinematic = true;
+        // accesses current screen touch position
         Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
 
-        Debug.Log(touchPosition);
+        // converts screen touch position to world position
+        Vector3 worldPosition = mainCamera.ScreenToWorldPoint(touchPosition);
+
+        currentBallRigidbody.position = worldPosition;
+
     }
 }
